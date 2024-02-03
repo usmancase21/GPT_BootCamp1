@@ -88,3 +88,27 @@ def read_heroes():
 # @app.get("/location/{asd}")
 def get_person_location(name:str, location: Annotated[Location, Depends(get_location_or_404)]):
     return location
+#  Step 7 updating database
+# updating data in the database
+@app.put("/person/{person_name}")
+def update_person(person_name: str, person_data: Location):
+    with Session(engine) as session:
+        person = session.query(Location).filter(Location.name == person_name).first()
+        if not person:
+            raise HTTPException(status_code=404, detail="Person not found")
+        for key, value in person_data.dict().items():
+            setattr(person, key, value)
+        session.commit()
+        session.refresh(person)
+        return person
+
+# Step 8 deleting data from the database
+@app.delete("/person/{person_name}")
+def delete_person(person_name: str):
+    with Session(engine) as session:
+        person = session.query(Location).filter(Location.name == person_name).first()
+        if not person:
+            raise HTTPException(status_code=404, detail="Person not found")
+        session.delete(person)
+        session.commit()
+        return {"detail": "Person deleted"}
