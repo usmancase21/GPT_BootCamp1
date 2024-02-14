@@ -1,0 +1,8 @@
+fastapifastapi
+httpx
+location
+psycopg2-binary        
+psycopg2-pool
+pydantic
+requests
+sqlalchemy
